@@ -104,6 +104,122 @@
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       launchConfetti(g.colors);
     }
+
+    closeVoting();
+  }
+
+  // ---------- Voting ----------
+
+  // Votes are kept by a free counter service. Preview mode uses its own
+  // tally so testing doesn't add to the real one.
+  var VOTE_API = "https://abacus.jasoncameron.dev";
+  var voteNs = config.voteNamespace ? config.voteNamespace + (preview ? "-preview" : "") : "";
+  var VOTE_KEY = "reveal-vote:" + voteNs;
+  var votes = { boy: 0, girl: 0 };
+  var myVote = null;
+  var votingOpen = true;
+  var voteTimer = null;
+  var voteButtons = document.querySelectorAll(".vote-btn");
+
+  function storageGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function storageSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* private mode */ }
+  }
+
+  function fetchCount(key, action) {
+    return fetch(VOTE_API + "/" + action + "/" + encodeURIComponent(voteNs) + "/" + key)
+      .then(function (res) {
+        if (res.status === 404) return { value: 0 }; // no votes yet
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (data) { votes[key] = data.value || 0; });
+  }
+
+  function loadVotes() {
+    return Promise.all([fetchCount("boy", "get"), fetchCount("girl", "get")]).then(renderVotes);
+  }
+
+  function plural(n) { return n + (n === 1 ? " vote" : " votes"); }
+
+  function renderVotes() {
+    var total = votes.boy + votes.girl;
+    var boyPct = total ? Math.round((votes.boy / total) * 100) : 50;
+    $("bar-boy").style.width = boyPct + "%";
+    $("bar-girl").style.width = (100 - boyPct) + "%";
+    $("count-boy").textContent = "Boy " + boyPct + "% · " + plural(votes.boy);
+    $("count-girl").textContent = plural(votes.girl) + " · " + (100 - boyPct) + "% Girl";
+    $("vote-results").hidden = false;
+
+    if (!votingOpen) {
+      if (!total) { $("vote").hidden = true; return; }
+      $("vote-status").textContent = votes[gender] + " of " + total + " guessed right!" +
+        (myVote ? (myVote === gender ? " Including you 🎉" : " Better luck next time!") : "");
+    } else if (myVote) {
+      $("vote-status").textContent = "You're on Team " + GENDERS[myVote].headline.replace("!", "") + ".";
+    }
+  }
+
+  function markChosen() {
+    for (var i = 0; i < voteButtons.length; i++) {
+      voteButtons[i].disabled = true;
+      voteButtons[i].classList.toggle("chosen", voteButtons[i].getAttribute("data-vote") === myVote);
+    }
+  }
+
+  function castVote(choice) {
+    if (myVote || !votingOpen) return;
+    for (var i = 0; i < voteButtons.length; i++) voteButtons[i].disabled = true;
+    $("vote-status").textContent = "Saving your vote…";
+    fetchCount(choice, "hit")
+      .then(function () {
+        myVote = choice;
+        storageSet(VOTE_KEY, choice);
+        markChosen();
+        return loadVotes();
+      })
+      .catch(function () {
+        if (!myVote) {
+          for (var i = 0; i < voteButtons.length; i++) voteButtons[i].disabled = false;
+          $("vote-status").textContent = "Couldn't save your vote. Please try again.";
+        }
+      });
+  }
+
+  function startVoting() {
+    if (!voteNs) return;
+    $("vote").hidden = false;
+    var saved = storageGet(VOTE_KEY);
+    if (GENDERS[saved]) {
+      myVote = saved;
+      markChosen();
+      loadVotes().catch(function () {});
+    } else {
+      $("vote-status").textContent = "Pick a side to see how everyone else voted.";
+    }
+    for (var i = 0; i < voteButtons.length; i++) {
+      voteButtons[i].addEventListener("click", function () {
+        castVote(this.getAttribute("data-vote"));
+      });
+    }
+    // Keep the tally fresh for people who have voted.
+    voteTimer = setInterval(function () {
+      if (myVote && votingOpen) loadVotes().catch(function () {});
+    }, 20000);
+  }
+
+  function closeVoting() {
+    votingOpen = false;
+    if (voteTimer) clearInterval(voteTimer);
+    if (!voteNs) return;
+    $("vote-buttons").hidden = true;
+    $("vote").querySelector(".vote-title").textContent = "How everyone guessed";
+    $("vote-status").textContent = "";
+    loadVotes().catch(function () {
+      $("vote").hidden = true;
+    });
   }
 
   // ---------- Confetti ----------
@@ -183,6 +299,7 @@
 
   // ---------- Start ----------
 
+  startVoting();
   tick();
   if (target > Date.now()) timer = setInterval(tick, 250);
 })();

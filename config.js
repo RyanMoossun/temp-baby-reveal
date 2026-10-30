@@ -20,4 +20,10 @@ window.REVEAL_CONFIG = {
 
   // Optional: shown under the reveal headline. Leave as "" to hide.
   babyName: "",
+
+  // Guests can vote boy or girl before the reveal. Votes are counted by
+  // the free abacus.jasoncameron.dev service under this name, so pick
+  // something unique. Change it to start the tally from zero, or set
+  // it to "" to turn voting off.
+  voteNamespace: "divall-reveal-20261030",
 };

@@ -16,6 +16,8 @@
 
 * { box-sizing: border-box; }
 
+[hidden] { display: none !important; }
+
 html, body { height: 100%; }
 
 body {
@@ -176,6 +178,78 @@ h1 {
   font-size: clamp(1.2rem, 3.5vw, 1.6rem);
   font-weight: 600;
   animation: fade-up 0.8s ease 1.2s both;
+}
+
+/* ---------- Voting ---------- */
+
+.vote {
+  margin-top: 36px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.vote-title {
+  margin: 0 0 14px;
+  font-family: "Fredoka", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+}
+
+.vote-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.vote-btn {
+  flex: 1;
+  max-width: 180px;
+  padding: 14px 16px;
+  border-radius: 999px;
+  border: 3px solid currentColor;
+  font: 600 1.05rem "Fredoka", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--tile-shadow);
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+}
+.vote-boy  { color: var(--boy-deep);  background: var(--boy-wash); }
+.vote-girl { color: var(--girl-deep); background: var(--girl-wash); }
+.vote-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.vote-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.vote-btn:disabled { cursor: default; opacity: 0.45; }
+.vote-btn.chosen { opacity: 1; color: #fff; }
+.vote-boy.chosen  { background: var(--boy-deep); border-color: var(--boy-deep); }
+.vote-girl.chosen { background: var(--girl-deep); border-color: var(--girl-deep); }
+
+.vote-results { margin-top: 18px; }
+
+.vote-bar {
+  display: flex;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--tile);
+  box-shadow: 0 6px 16px var(--tile-shadow);
+}
+.vote-bar span { width: 50%; transition: width 0.8s ease; }
+.bar-boy  { background: var(--boy); }
+.bar-girl { background: var(--girl); }
+
+.vote-counts {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+#count-boy  { color: var(--boy-deep); }
+#count-girl { color: var(--girl-deep); }
+
+.vote-status {
+  margin: 12px 0 0;
+  min-height: 1.4em;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
 }
 
 /* ---------- Error ---------- */

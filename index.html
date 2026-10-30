@@ -47,6 +47,19 @@
       <p id="reveal-name" class="reveal-name" hidden></p>
     </section>
 
+    <section id="vote" class="vote" hidden>
+      <p class="vote-title">What's your guess?</p>
+      <div id="vote-buttons" class="vote-buttons">
+        <button type="button" class="vote-btn vote-boy" data-vote="boy">Team Boy</button>
+        <button type="button" class="vote-btn vote-girl" data-vote="girl">Team Girl</button>
+      </div>
+      <div id="vote-results" class="vote-results" hidden>
+        <div class="vote-bar"><span id="bar-boy" class="bar-boy"></span><span id="bar-girl" class="bar-girl"></span></div>
+        <div class="vote-counts"><span id="count-boy"></span><span id="count-girl"></span></div>
+      </div>
+      <p id="vote-status" class="vote-status" aria-live="polite"></p>
+    </section>
+
     <section id="error" class="error" hidden role="alert"></section>
   </main>
 
