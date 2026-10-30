@@ -8,11 +8,7 @@ window.REVEAL_CONFIG = {
   // e.g. "2026-12-01T18:00:00+00:00" (UK winter) or "-05:00" (US Eastern).
   revealAt: "2026-10-30T20:00:00+00:00",
 
-  // The gender, encoded so it isn't readable at a glance in the source.
-  //   "Ym95"     = boy
-  //   "Z2lybA==" = girl
-  // This is light obfuscation, not real security. Anyone determined
-  // enough to decode it can.
+
   gender: "Z2lybA==",
 
   title: "Baby Divall is on the way!",
