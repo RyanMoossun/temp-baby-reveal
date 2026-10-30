@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gender Reveal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="balloons" aria-hidden="true">
+    <span class="balloon b1"></span>
+    <span class="balloon b2"></span>
+    <span class="balloon b3"></span>
+    <span class="balloon b4"></span>
+    <span class="balloon b5"></span>
+    <span class="balloon b6"></span>
+  </div>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <main>
+    <header>
+      <p class="eyebrow">Gender reveal</p>
+      <h1 id="title">Baby is on the way!</h1>
+      <p id="subtitle" class="subtitle"></p>
+    </header>
+
+    <section id="countdown" class="countdown" aria-live="off">
+      <div class="question" aria-hidden="true">
+        <span class="q-boy">?</span><span class="q-girl">?</span>
+      </div>
+      <div class="tiles">
+        <div class="tile"><span class="num" id="days">00</span><span class="label">Days</span></div>
+        <div class="tile"><span class="num" id="hours">00</span><span class="label">Hours</span></div>
+        <div class="tile"><span class="num" id="minutes">00</span><span class="label">Minutes</span></div>
+        <div class="tile" id="seconds-tile"><span class="num" id="seconds">00</span><span class="label">Seconds</span></div>
+      </div>
+      <p id="when" class="when"></p>
+    </section>
+
+    <section id="reveal" class="reveal" hidden aria-live="polite">
+      <p class="reveal-pre">It's a…</p>
+      <h2 id="reveal-headline" class="reveal-headline"></h2>
+      <p id="reveal-name" class="reveal-name" hidden></p>
+    </section>
+
+    <section id="error" class="error" hidden role="alert"></section>
+  </main>
+
+  <footer>
+    <span class="dot boy"></span> Team Boy &nbsp;·&nbsp; Team Girl <span class="dot girl"></span>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
